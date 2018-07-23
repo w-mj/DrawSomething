@@ -19,6 +19,24 @@
             <canvas width=877 height=591 id="canvas-area">
                 <h1>Canvas is not supported on your browser.</h1>
             </canvas>
+            <div class="btn-toolbar" role="toolbar" aria-label="btngroup">
+                <div class="btn-group" role="group" aria-label="btngroup">
+                    <div class="btn btn-default" onclick="setLineWidth(2)"><div id="painter-very-thin"></div></div>
+                    <div class="btn btn-default" onclick="setLineWidth(5)"><div id="painter-thin"></div></div>
+                    <div class="btn btn-default" onclick="setLineWidth(8)"><div id="painter-middle"></div></div>
+                    <div class="btn btn-default" onclick="setLineWidth(11)"><div id="painter-wide"></div></div>
+                    <div class="btn btn-default" onclick="setLineWidth(14)"><div id="painter-super-wide"></div></div>
+                </div>
+                <div class="btn-group" role="group" aria-label="btngroup">
+                    <div class="btn btn-default">A</div>
+                    <div class="btn btn-default">B</div>
+                    <div class="btn btn-default">C</div>
+                </div>
+                <div class="btn-group" role="group" aria-label="btngroup">
+                    <div class="btn btn-default">ERASER</div>
+                    <div class="btn btn-default">CLEAR</div>
+                </div>
+            </div>
         </div>
         <div class="col-md-3" id="text-area">
             <h1 style="text-align: center;">TEXT</h1>
