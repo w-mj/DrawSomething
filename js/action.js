@@ -33,3 +33,7 @@ function setLineWidth(width) {
 function setLineColor(color) {
     ctx.strokeStyle = color;
 }
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, cvs.width(), cvs.height());
+}
