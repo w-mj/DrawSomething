@@ -50,3 +50,57 @@ canvas {
     border-radius: 50px;
     background: black;
 }
+
+#painter-black {
+    width: 25px;
+    height: 25px;
+    background: #000000;
+}
+
+#painter-red {
+    width: 25px;
+    height: 25px;
+    background: #ff0000;
+}
+
+#painter-green {
+    width: 25px;
+    height: 25px;
+    background: #00ff00;
+}
+
+#painter-orange {
+    width: 25px;
+    height: 25px;
+    background: #ff6600;
+}
+
+#painter-blue {
+    width: 25px;
+    height: 25px;
+    background: #0000ff;
+}
+
+#painter-purple {
+    width: 25px;
+    height: 25px;
+    background: #660066;
+}
+
+#painter-gray {
+    width: 25px;
+    height: 25px;
+    background: #cccccc;
+}
+
+#painter-yellow {
+    width: 25px;
+    height: 25px;
+    background: #ffff00;
+}
+
+#painter-white {
+    width: 25px;
+    height: 25px;
+    background: #ffffff;
+}

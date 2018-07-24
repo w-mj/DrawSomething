@@ -27,10 +27,9 @@ $(document).ready(function() {
 });
 
 function setLineWidth(width) {
-    console.log(width);
     ctx.lineWidth = width;
 }
 
 function setLineColor(color) {
-    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
 }
