@@ -109,3 +109,11 @@ span {
     width: 25px;
     height: 25px;
 }
+
+textarea {
+    resize: none;
+}
+
+/*input {*/
+    /*height: 25px;*/
+/*}*/
