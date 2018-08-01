@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Draw Something</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-offset-4 text-center">
+            <h1>Draw Something.</h1>
+            <br><br>
+            <form action="game.html" method="get">
+                <input type="text" class="form-control input-lg" placeholder="Input a nickname." id="nickname">
+                <input class="btn btn-default btn-lg" type="submit" id="newroom" value="Create new room.">
+                <div class="input-group input-group-lg">
+                    <input type="text" class="form-control" placeholder="Room number" id="roomnum">
+                    <span class="input-group-btn">
+                         <input class="btn btn-default" type="submit" id="join" value="Join!">
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        $('#newroom').width($('#nickname').width())
+    });
+</script>
+
+</html>
