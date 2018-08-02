@@ -14,12 +14,12 @@
             <h1>Draw Something.</h1>
             <br><br>
             <form action="game.html" method="get">
-                <input type="text" class="form-control input-lg" placeholder="Input a nickname." id="nickname">
-                <input class="btn btn-default btn-lg" type="submit" id="newroom" value="Create new room.">
+                <input type="text" class="form-control input-lg" placeholder="Input a nickname." id="nickname" name="nickname">
+                <input class="btn btn-default btn-lg" type="submit" id="newroom" name="newroom" value="Create new room.">
                 <div class="input-group input-group-lg">
-                    <input type="text" class="form-control" placeholder="Room number" id="roomnum">
+                    <input type="text" class="form-control" placeholder="Room number" id="roomnum" name="roomnum">
                     <span class="input-group-btn">
-                         <input class="btn btn-default" type="submit" id="join" value="Join!">
+                         <input class="btn btn-default" type="submit" id="join" name="join" value="Join!">
                     </span>
                 </div>
             </form>
@@ -32,5 +32,4 @@
         $('#newroom').width($('#nickname').width())
     });
 </script>
-
 </html>

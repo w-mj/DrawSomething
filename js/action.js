@@ -1,5 +1,7 @@
 let ctx, cvs;
 let drawing = false;
+let roomnum = "";
+let nickname = "";
 
 $(document).ready(function() {
     $('#canvas-container').height($("#text-window").height());
@@ -26,6 +28,17 @@ $(document).ready(function() {
     cvs.mouseleave(function(event) {
         drawing = false;
     });
+    let parameters = location.search.substr(1).split('&');
+    parameters = parameters.map(function(x){return x.split('=')});
+    for (x in parameters) {
+        t = parameters[x];
+        switch (t[0]) {
+            case 'roomnum': roomnum = t[1]; break;
+            case 'nickname': nickname = t[1];break;
+            case 'newroom': newroom(); break;
+            case 'join': joinroom(); break;
+        }
+    }
 });
 
 function setLineWidth(width) {
@@ -56,3 +69,11 @@ let CanvasAutoResize = {
         });
     }
 };
+
+function newroom() {
+
+}
+
+function joinroom() {
+    console.log('join' + roomnum);
+}
