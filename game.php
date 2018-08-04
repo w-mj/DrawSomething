@@ -41,12 +41,18 @@ class Room {
     private $roomNumber;
     private $players = array();
     private $playing = false;
-    function __construct($host){  // a room must have at least one player.
-        $this->roomNumber = findFree();  // new room
+    private function __construct(){}  // private construct function.
+
+    public static function newRoom($host) {
+        $roomNumber = findFree();
+        if ($roomNumber == null)
+            return null;
         global $roomList;
-        if ($this->roomNumber != null)  // if find a free room successfully, put room into the list.
-            $roomList[$this->roomNumber] = $this;
-        $this->come($host);
+        $room = new Room();
+        $room->come($host);
+        $room->roomNumber = $roomNumber;
+        $roomList[$roomNumber] = $room;
+        return $room;
     }
 
     public function getRoomNumber()
@@ -55,7 +61,7 @@ class Room {
     }
 
     public function come(Player $player) {
-        $this->players[$player->connection>id] = $player;  // A player join the room
+        $this->players[$player->connection->id] = $player;  // A player join the room
         $player->score = 0;
         $player->room = $this;
     }
@@ -84,9 +90,7 @@ class Room {
         $this->playing = false;
     }
 
-    public function sendAll($msg, $type) {
-        if ($type != 'raw')
-            $msg = '{"'.$type.'":"'.$msg.'"}';
+    public function sendAll($msg) {
         foreach ($this->players as $ip => $conn) {
             $conn->send($msg);
         }
@@ -94,19 +98,21 @@ class Room {
 }
 
 $ws = new Worker('websocket://127.0.0.1:9394');
-$ws->onConnect = function(TcpConnection $conn) use ($hall) {
+$ws->onConnect = function(TcpConnection $conn) use (&$hall) {
+    echo "A player connected, ip:".$conn->getRemoteIp().' id:'.$conn->id."\n";
     $hall[$conn->id] = new Player($conn);
-    echo "A player connected, ip:".$conn->id.' id:'.$conn->id;
 };
 
-$ws->onClose = function(TcpConnection $conn) use ($hall) {
+$ws->onClose = function(TcpConnection $conn) use (&$hall) {
     $p = $hall[$conn->id];
     if ($p -> room != null)
         $p -> room -> leave($p);
     unset($hall[$conn->id]);
+    echo "A player leaved, ip:".$conn->getRemoteIp().' id:'.$conn->id."\n";
 };
 
-$ws->onMessage = function(TcpConnection $conn, $raw) use ($hall, $roomList) {
+$ws->onMessage = function(TcpConnection $conn, $raw) use (&$hall, &$roomList) {
+    echo $conn->getRemoteAddress() .'  '.$raw."\n";
     $msg = json_decode($raw, true);
     $player = $hall[$conn->id];
     $room = $player->room;
@@ -114,7 +120,7 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use ($hall, $roomList) {
         case 'r': $hall[$conn->id]->nickname = $msg['n']; break;  // rename
         case 'j':  // join
             if (array_key_exists($msg['n'], $roomList) || $roomList[$msg['n']] == null)
-                $conn->send('{"err":"illegal room number"}');
+                $conn->send('{"error":"no_such_room"}');
             else {
                 $room = $roomList[$msg['n']];
                 $room->come($player);
@@ -123,13 +129,20 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use ($hall, $roomList) {
             break;
         case 's': // say
             // TODO: check correct
-            $room->sendAll($msg['msg'], 'msg');
+            $room->sendAll(json_encode(array('c'=>'s', 'n'=>$msg['n'])));
             break;
         case 'd': // draw point
-            $room->sendAll($raw, 'raw');
+            $room->sendAll($raw);
             break;
         case 't': // timer
-            $room->sendAll($raw, 'raw');
+            $room->sendAll($raw);
+            break;
+        case 'c': // create room.
+            $room = Room::newRoom($hall[$conn->id]);
+            if ($room == null)
+                $conn->send(json_encode(array('c'=>'c', 'r'=>'e', 'w'=>'room full')));
+            else
+                $conn->send(json_encode(array('c'=>'c', 'r'=>'s', 'n'=>$room->getRoomNumber())));
             break;
     }
 };

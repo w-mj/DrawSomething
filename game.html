@@ -35,10 +35,10 @@
             <h1 style="text-align: center;">Draw Something.</h1>
         </div>
         <div class="row">
-            <div class="col-md-4">&nbsp;</div>
-            <div class="col-md-2"><h3>Question</h3></div>
-            <div class="col-md-2"><h3>Hint</h3></div>
-            <div class="col-md-2"><h3>Timer</h3></div>
+            <div class="col-md-4"><h3 id="show-room-number"></h3></div>
+            <div class="col-md-2"><h3 id="question">Question</h3></div>
+            <div class="col-md-2"><h3 id="hint">Hint</h3></div>
+            <div class="col-md-2"><h3 id="timer">Timer</h3></div>
             <div class="col-md-2"><h3>Button Area</h3></div>
         </div>
         <div class="row" id="main-row">
@@ -85,9 +85,9 @@
                     <textarea class="form-control" id="text-window" rows="25" readonly="readonly"></textarea>
                 </div>
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Text input">
+                    <input type="text" class="form-control" placeholder="Text input" id="input-box">
                     <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-send"></span></button>
+                <button type="button" class="btn btn-primary" onclick="say()"><span class="glyphicon glyphicon-send"></span></button>
                 </span>
                 </div>
             </div>

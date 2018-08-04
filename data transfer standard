@@ -14,17 +14,23 @@ When data is sending to server, 'c' may have following situations.
     'r': rename, new name is in followed 'n' field.
     'j': join a exists room, room number is in followed 'n' field.
     's': say something, text is in followed 't' field.
-    'd': draw a point, following fields are 'x', 'y', 'co'(color). server should not process on this command, just send directly to all clients in same room.
     't': update timer, following field is 'r'(remain time), server do not process on this either.
     'c': create room.
+    'md', 'mu': mouse down, mouse up.
+    'mm': mouse move. new position is in followed x, y field.
+    'sc': set color. color is in followed 'co' field.
+    'sw': set width. width is in followed 'wd' field.
+    'to': time out.
 
 
 When data is sending to client, 'c' may have following situations.
-    'j': as return of join the room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>]}.
+    'j': as return of join the room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>][, 'n':<room number>]}.
     's': a player say something in chat box, {'c':'s', 't':<text without correct characters.>}.
-    'd': painter draw a point, just send to all client in room as painter send.
     't': update clients' timer, just send directly too.
     'c': as return of create a room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>]}
     'q': set question, question is in followed 'q' field.
     'h': set hint, hint is in followed 'h' field.
-    'n': set the number of characters of question.
+    'n': set the number of characters of question, the number is also in field 'q'.
+    'md', 'mu', 'mm', 'sc': send to client directly.
+    'b': begin drawing.
+    'e': end drawing.
