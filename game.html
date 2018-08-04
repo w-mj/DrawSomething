@@ -11,64 +11,85 @@
 </head>
 <body>
 <div class="container" style="width: 80%">
-    <div class="row">
-        <h1 style="text-align: center;">Draw Something.</h1>
-    </div>
-    <div class="row">
-        <div class="col-md-4">&nbsp;</div>
-        <div class="col-md-2"><h3>Question</h3></div>
-        <div class="col-md-2"><h3>Hint</h3></div>
-        <div class="col-md-2"><h3>Timer</h3></div>
-        <div class="col-md-2"><h3>Button Area</h3></div>
-    </div>
-    <div class="row" id="main-row">
-        <div class="col-md-2">
-            <div class="form-group">
-                <label for="score-board" style="display: none;">Chat Window</label>
-                <textarea class="form-control" id="score-board" rows="25" readonly="readonly"></textarea>
+    <div id="welcome-page">
+        <div class="row">
+            <div class="col-md-4 col-sm-offset-4 text-center">
+                <h1>Draw Something.</h1>
+                <br><br>
+                <form>
+                    <input type="text" class="form-control input-lg" placeholder="Input a nickname." id="nickname" name="nickname">
+                    <input class="btn btn-default btn-lg" type="button" id="newroom" name="newroom"
+                           value="Create new room." onclick="createroom();">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" placeholder="Room number" id="roomnum" name="roomnum">
+                        <span class="input-group-btn">
+                            <input class="btn btn-default" type="button" id="join" name="join" value="Join!" onclick="joinroom()">
+                        </span>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="col-md-8" id="drawing-area">
-            <div id="canvas-container">
-            <canvas id="canvas-area">
-                <h1>Canvas is not supported on your browser.</h1>
-            </canvas>
-            </div>
-            <p>&nbsp;</p>
-            <div class="btn-toolbar" role="toolbar" aria-label="btngroup">
-                <div class="btn-group" role="group" aria-label="btngroup">
-                    <div class="btn btn-default" onclick="setLineWidth(2)"><div id="painter-very-thin"></div></div>
-                    <div class="btn btn-default" onclick="setLineWidth(5)"><div id="painter-thin"></div></div>
-                    <div class="btn btn-default" onclick="setLineWidth(8)"><div id="painter-middle"></div></div>
-                    <div class="btn btn-default" onclick="setLineWidth(11)"><div id="painter-wide"></div></div>
-                    <div class="btn btn-default" onclick="setLineWidth(14)"><div id="painter-super-wide"></div></div>
-                </div>
-                <div class="btn-group" role="group" aria-label="btngroup">
-                    <div class="btn btn-default" onclick="setLineColor('#000000')"><div id="painter-black"></div></div>
-                    <div class="btn btn-default" onclick="setLineColor('#ff0000')"><div id="painter-red"></div></div>
-                    <div class="btn btn-default" onclick="setLineColor('#00ff00')"><div id="painter-green"></div></div>
-                    <div class="btn btn-default" onclick="setLineColor('#ff6600')"><div id="painter-orange"></div></div>
-                    <div class="btn btn-default" onclick="setLineColor('#0000ff')"><div id="painter-blue"></div></div>
-                    <div class="btn btn-default" onclick="setLineColor('#660066')"><div id="painter-purple"></div></div>
-                    <div class="btn btn-default" onclick="setLineColor('#cccccc')"><div id="painter-gray"></div></div>
-                    <div class="btn btn-default" onclick="setLineColor('#ffff00')"><div id="painter-yellow"></div></div>
-                </div>
-                <div class="btn-group" role="group" aria-label="btngroup">
-                    <div class="btn btn-default" onclick="setLineColor('#ffffff')"><span class="glyphicon glyphicon-erase"></span></div>
-                    <div class="btn btn-default" onclick="clearCanvas()"><span class="glyphicon glyphicon-trash"></span></div>
-                </div>
-            </div>
+    </div>
+    <div id="game-page">
+        <div class="row">
+            <h1 style="text-align: center;">Draw Something.</h1>
         </div>
-        <div class="col-md-2" id="text-area">
-            <div class="form-group">
-                <label for="text-window" style="display: none;">Chat Window</label>
-                <textarea class="form-control" id="text-window" rows="25" readonly="readonly"></textarea>
+        <div class="row">
+            <div class="col-md-4">&nbsp;</div>
+            <div class="col-md-2"><h3>Question</h3></div>
+            <div class="col-md-2"><h3>Hint</h3></div>
+            <div class="col-md-2"><h3>Timer</h3></div>
+            <div class="col-md-2"><h3>Button Area</h3></div>
+        </div>
+        <div class="row" id="main-row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="score-board" style="display: none;">Chat Window</label>
+                    <textarea class="form-control" id="score-board" rows="25" readonly="readonly"></textarea>
+                </div>
             </div>
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Text input">
-                <span class="input-group-btn">
+            <div class="col-md-8" id="drawing-area">
+                <div id="canvas-container">
+                    <canvas id="canvas-area">
+                        <h1>Canvas is not supported on your browser.</h1>
+                    </canvas>
+                </div>
+                <p>&nbsp;</p>
+                <div class="btn-toolbar" role="toolbar" aria-label="btngroup">
+                    <div class="btn-group" role="group" aria-label="btngroup">
+                        <div class="btn btn-default" onclick="setLineWidth(2)"><div id="painter-very-thin"></div></div>
+                        <div class="btn btn-default" onclick="setLineWidth(5)"><div id="painter-thin"></div></div>
+                        <div class="btn btn-default" onclick="setLineWidth(8)"><div id="painter-middle"></div></div>
+                        <div class="btn btn-default" onclick="setLineWidth(11)"><div id="painter-wide"></div></div>
+                        <div class="btn btn-default" onclick="setLineWidth(14)"><div id="painter-super-wide"></div></div>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="btngroup">
+                        <div class="btn btn-default" onclick="setLineColor('#000000')"><div id="painter-black"></div></div>
+                        <div class="btn btn-default" onclick="setLineColor('#ff0000')"><div id="painter-red"></div></div>
+                        <div class="btn btn-default" onclick="setLineColor('#00ff00')"><div id="painter-green"></div></div>
+                        <div class="btn btn-default" onclick="setLineColor('#ff6600')"><div id="painter-orange"></div></div>
+                        <div class="btn btn-default" onclick="setLineColor('#0000ff')"><div id="painter-blue"></div></div>
+                        <div class="btn btn-default" onclick="setLineColor('#660066')"><div id="painter-purple"></div></div>
+                        <div class="btn btn-default" onclick="setLineColor('#cccccc')"><div id="painter-gray"></div></div>
+                        <div class="btn btn-default" onclick="setLineColor('#ffff00')"><div id="painter-yellow"></div></div>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="btngroup">
+                        <div class="btn btn-default" onclick="setLineColor('#ffffff')"><span class="glyphicon glyphicon-erase"></span></div>
+                        <div class="btn btn-default" onclick="clearCanvas()"><span class="glyphicon glyphicon-trash"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2" id="text-area">
+                <div class="form-group">
+                    <label for="text-window" style="display: none;">Chat Window</label>
+                    <textarea class="form-control" id="text-window" rows="25" readonly="readonly"></textarea>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Text input">
+                    <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-send"></span></button>
                 </span>
+                </div>
             </div>
         </div>
     </div>

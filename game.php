@@ -7,6 +7,8 @@
  */
 
 require_once __DIR__.'/vendor/autoload.php';
+use Workerman\Worker;
+use Workerman\Connection\TcpConnection;
 
 $maxGameRoom = 10;
 $roomNumberPool = range(100, 100 + $maxGameRoom);
@@ -53,13 +55,13 @@ class Room {
     }
 
     public function come(Player $player) {
-        $this->players[$player->connection>getRemoteIP()] = $player;  // A player join the room
+        $this->players[$player->connection>id] = $player;  // A player join the room
         $player->score = 0;
         $player->room = $this;
     }
 
     public function leave(Player $player) {
-        unset($this->players[$player->connection->getRemoteIP()]); // delete both key and value.
+        unset($this->players[$player->connection->id]); // delete both key and value.
         if (count($this->players) == 0) {  // if all players leave the room, release.
             global $roomList;
             $roomList[$this->roomNumber] = null;
@@ -91,24 +93,25 @@ class Room {
     }
 }
 
-$ws = new Workerman\Worker('websocket:127.0.0.1:9394');
-$ws->onConnect = function(Workerman\Connection\TcpConnection $conn) use ($hall) {
-    $hall[$conn->getRemoteIp()] = new Player($conn);
+$ws = new Worker('websocket://127.0.0.1:9394');
+$ws->onConnect = function(TcpConnection $conn) use ($hall) {
+    $hall[$conn->id] = new Player($conn);
+    echo "A player connected, ip:".$conn->id.' id:'.$conn->id;
 };
 
-$ws->onClose = function(Workerman\Connection\TcpConnection $conn) use ($hall) {
-    $p = $hall[$conn->getRemoteIp()];
+$ws->onClose = function(TcpConnection $conn) use ($hall) {
+    $p = $hall[$conn->id];
     if ($p -> room != null)
         $p -> room -> leave($p);
-    unset($hall[$conn->getRemoteIp()]);
+    unset($hall[$conn->id]);
 };
 
-$ws->onMessage = function(Workerman\Connection\TcpConnection $conn, $raw) use ($hall, $roomList) {
+$ws->onMessage = function(TcpConnection $conn, $raw) use ($hall, $roomList) {
     $msg = json_decode($raw, true);
-    $player = $hall[$conn->getRemoteIp()];
+    $player = $hall[$conn->id];
     $room = $player->room;
     switch ($msg['c']) {
-        case 'rn': $hall[$conn->getRemoteIp()]->nickname = $msg['n']; break;  // rename
+        case 'r': $hall[$conn->id]->nickname = $msg['n']; break;  // rename
         case 'j':  // join
             if (array_key_exists($msg['n'], $roomList) || $roomList[$msg['n']] == null)
                 $conn->send('{"err":"illegal room number"}');
@@ -125,5 +128,11 @@ $ws->onMessage = function(Workerman\Connection\TcpConnection $conn, $raw) use ($
         case 'd': // draw point
             $room->sendAll($raw, 'raw');
             break;
+        case 't': // timer
+            $room->sendAll($raw, 'raw');
+            break;
     }
 };
+$ws->count=1;
+
+Worker::runAll();

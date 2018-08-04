@@ -28,17 +28,8 @@ $(document).ready(function() {
     cvs.mouseleave(function(event) {
         drawing = false;
     });
-    let parameters = location.search.substr(1).split('&');
-    parameters = parameters.map(function(x){return x.split('=')});
-    for (x in parameters) {
-        t = parameters[x];
-        switch (t[0]) {
-            case 'roomnum': roomnum = t[1]; break;
-            case 'nickname': nickname = t[1];break;
-            case 'newroom': newroom(); break;
-            case 'join': joinroom(); break;
-        }
-    }
+    $('#game-page').hide();
+    $('#newroom').width($('#nickname').width()); // make login button as the same width.
 });
 
 function setLineWidth(width) {
@@ -70,10 +61,17 @@ let CanvasAutoResize = {
     }
 };
 
-function newroom() {
-
+function createroom() {
+    $('#welcome-page').hide();
+    $('#game-page').show();
+    nickname = $('#nickname').val();
+    console.log('you are ' + nickname);
 }
 
 function joinroom() {
-    console.log('join' + roomnum);
+    $('#welcome-page').hide();
+    $('#game-page').show();
+    nickname = $('#nickname').val();
+    roomnum = $('#roomnum').val();
+    console.log('you are ' + nickname + 'join ' + roomnum);
 }
