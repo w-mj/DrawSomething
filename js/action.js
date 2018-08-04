@@ -104,7 +104,7 @@ function joinroom() {
     roomnum = $('#roomnum').val();
     nickname = $('#nickname').val();
     ws.send(JSON.stringify({c:'r', n:nickname}));
-    ws.send(JSON.stringify({c:'j', n:roomnum}));
+    ws.send(JSON.stringify({c:'j', n:parseInt(roomnum)}));
     console.log('you are ' + nickname + 'join ' + roomnum);
 }
 
@@ -141,25 +141,22 @@ ws.onmessage = function(event) {
             if (data.r === 's') {
                 $('#welcome-page').hide();
                 $('#game-page').show();
+                roomnum = data.n;
+                $('#show-room-number').html(roomnum);
             }
             else
                 console.log('join room fail: ' + data.w);
             break;
-        case 's':
-            $("#text-window").append(data.t);
-            break;
+        case 's': $("#text-window").append(data.t); break;
         case 'md': onMouseDown(data.x, data.y); break;
         case 'mm': onMouseMove(data.x, data.y); break;
         case 'mu': drawing = false; break;
         case 'sc': setLineColor(data.co); break;
         case 'sw': setLineWidth(data.wd); break;
         case 't': $('#timer').html(data.r); break;
-        case 'c': if (data.r === 's') {
-            $('#welcome-page').hide();
-            $('#game-page').show();
-            $('#show-room-number').html(data.n);
-        } else
+        case 'c': if (data.r === 'e') {
             console.log('create room fail: ' + data.w);
+        }
         break;
         case 'n':
         case 'q': $('#question').html(data.q); break;
@@ -169,5 +166,6 @@ ws.onmessage = function(event) {
             myTurn = true;
             break;
         case 'e': myTurn = false; break;
+        case 'i': $("#text-window").append("welcome " + data.n + " join the room."); break;
     }
 };

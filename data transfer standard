@@ -21,6 +21,7 @@ When data is sending to server, 'c' may have following situations.
     'sc': set color. color is in followed 'co' field.
     'sw': set width. width is in followed 'wd' field.
     'to': time out.
+    'i': in, a play join the room, player's nickname is followed by 'n'
 
 
 When data is sending to client, 'c' may have following situations.

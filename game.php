@@ -49,9 +49,9 @@ class Room {
             return null;
         global $roomList;
         $room = new Room();
-        $room->come($host);
         $room->roomNumber = $roomNumber;
         $roomList[$roomNumber] = $room;
+        $room->come($host);
         return $room;
     }
 
@@ -64,6 +64,8 @@ class Room {
         $this->players[$player->connection->id] = $player;  // A player join the room
         $player->score = 0;
         $player->room = $this;
+        $this->sendAll(json_encode(array('c'=>'i', 'n'=>$player->nickname)));
+        $player->connection->send('{"c":"j", "r":"s", "n":'.$this->roomNumber."}");
     }
 
     public function leave(Player $player) {
@@ -91,8 +93,8 @@ class Room {
     }
 
     public function sendAll($msg) {
-        foreach ($this->players as $ip => $conn) {
-            $conn->send($msg);
+        foreach ($this->players as $id => $player) {
+            $player->connection->send($msg);
         }
     }
 }
@@ -119,12 +121,12 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use (&$hall, &$roomList) {
     switch ($msg['c']) {
         case 'r': $hall[$conn->id]->nickname = $msg['n']; break;  // rename
         case 'j':  // join
-            if (array_key_exists($msg['n'], $roomList) || $roomList[$msg['n']] == null)
-                $conn->send('{"error":"no_such_room"}');
-            else {
+            if (array_key_exists($msg['n'], $roomList) && $roomList[$msg['n']] != null) {
                 $room = $roomList[$msg['n']];
                 $room->come($player);
-                $room->sendAll($player->nickname . ' join the game.', 'msg');
+            }
+            else {
+                $conn->send('{"c":"e", "w":"no such room"}');
             }
             break;
         case 's': // say
