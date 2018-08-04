@@ -1,0 +1,30 @@
+Use json in data transfer process.
+
+c: command in key, create in value.
+j: join the room.
+s: say in command, success in return.
+f: fail.
+w: why.
+d: draw a point.
+t: timer in command, text in command 's'.
+n: name/number.
+
+Json body must contains a 'c' field, means 'command', in order to indicate reason of this data transferring.
+When data is sending to server, 'c' may have following situations.
+    'r': rename, new name is in followed 'n' field.
+    'j': join a exists room, room number is in followed 'n' field.
+    's': say something, text is in followed 't' field.
+    'd': draw a point, following fields are 'x', 'y', 'co'(color). server should not process on this command, just send directly to all clients in same room.
+    't': update timer, following field is 'r'(remain time), server do not process on this either.
+    'c': create room.
+
+
+When data is sending to client, 'c' may have following situations.
+    'j': as return of join the room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>]}.
+    's': a player say something in chat box, {'c':'s', 't':<text without correct characters.>}.
+    'd': painter draw a point, just send to all client in room as painter send.
+    't': update clients' timer, just send directly too.
+    'c': as return of create a room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>]}
+    'q': set question, question is in followed 'q' field.
+    'h': set hint, hint is in followed 'h' field.
+    'n': set the number of characters of question.
