@@ -115,25 +115,25 @@ function say() {
     let text = $('#input-box').val();
     ws.send(JSON.stringify({c:'s', t:text}));
 }
+let timer_time = 0;
+let start_timer = false;
+function resetTimer(time) {
+    timer_time = time;
+    $('#timer').html(timer_time);
+}
 
-let timer = class Timer {
-    constructor() {
-        this.time = 120;
-        setInterval(function() {
-            if (myTurn) {
-                this.time -= 1;
-                $('#timer').html(this.time);
-                if (this.time === 0)
-                    ws.send('{"c":"to"}');
-                else
-                    ws.send(JSON.stringify({c:'t', r:this.time}))
-            }
-        })
+setInterval(function() {
+    if (myTurn && start_timer) {
+        timer_time -= 1;
+        $('#timer').html(timer_time);
+        if (timer_time === 0) {
+            start_timer = false;
+            ws.send('{"c": "to"}');
+        } else {
+            ws.send(JSON.stringify({c:'t', r:timer_time}));
+        }
     }
-    reset() {
-        this.time = 120;
-    }
-};
+}, 1000);
 
 function ready() {
     readyState = !readyState;
@@ -176,8 +176,9 @@ ws.onmessage = function(event) {
         case 'q': $('#question').html(data.q); break;
         case 'h': $('#hint').html(data.q); break;
         case 'b':
-            timer.reset();
+            resetTimer(120);
             myTurn = true;
+            start_timer = true;
             break;
         case 'e': myTurn = false; break;
         case 'i': $("#text-window").append("welcome " + data.n + " join the room.\n"); break;
