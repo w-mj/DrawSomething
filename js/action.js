@@ -175,6 +175,7 @@ ws.onmessage = function(event) {
         case 'q': $('#question').html(data.q); break;
         case 'h': $('#hint').html(data.q); break;
         case 'b':
+            clearCanvas();
             resetTimer(120);
             myTurn = true;
             start_timer = true;

@@ -179,6 +179,8 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use (&$hall, &$roomList) {
             $player->ready = true;
             if ($room->allReady())
                 $room->start();
+            break;
+        case 'to': $room->nextDrawer(); break;
     }
 };
 $ws->count=1;
