@@ -25,6 +25,7 @@ class Player {
     public $room = null;
     public $nickname = 'anonymous';
     public $score = 0;
+    public $drawing = true;
     function __construct($connection) {
         $this->connection = $connection;
     }
@@ -145,6 +146,14 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use (&$hall, &$roomList) {
                 $conn->send(json_encode(array('c'=>'c', 'r'=>'e', 'w'=>'room full')));
             else
                 $conn->send(json_encode(array('c'=>'c', 'r'=>'s', 'n'=>$room->getRoomNumber())));
+            break;
+        case 'md':
+        case 'mu':
+        case 'mm':
+        case 'sc':
+        case 'sw':
+            if ($player->drawing)
+                $room->sendAll($raw);
             break;
     }
 };
