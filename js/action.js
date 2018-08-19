@@ -129,9 +129,8 @@ setInterval(function() {
         if (timer_time === 0) {
             start_timer = false;
             ws.send('{"c": "to"}');
-        } else {
-            ws.send(JSON.stringify({c:'t', r:timer_time}));
         }
+        ws.send(JSON.stringify({c:'t', r:timer_time}));
     }
 }, 1000);
 
