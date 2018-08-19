@@ -22,6 +22,8 @@ When data is sending to server, 'c' may have following situations.
     'sw': set width. width is in followed 'wd' field.
     'to': time out.
     'i': in, a play join the room, player's nickname is followed by 'n'
+    'sr': ready.
+    'cr': cancel ready.
 
 
 When data is sending to client, 'c' may have following situations.

@@ -25,7 +25,8 @@ class Player {
     public $room = null;
     public $nickname = 'anonymous';
     public $score = 0;
-    public $drawing = true;
+    public $drawing = false;
+    public $ready = false;
     function __construct($connection) {
         $this->connection = $connection;
     }
@@ -42,6 +43,7 @@ class Room {
     private $roomNumber;
     private $players = array();
     private $playing = false;
+    private $currentPlayer = null;
     private function __construct(){}  // private construct function.
 
     public static function newRoom($host) {
@@ -80,23 +82,41 @@ class Room {
     public function start() {
         $this->playing = true;
         reset($this->players);
-        return current($this->players);
+        $this->currentPlayer = current($this->players);
+        $this->currentPlayer->drawing = true;
+        $this->currentPlayer->connection->send('{"c":"b"}');
+        $this->sendAll('{"c":"s", "t":"game start", "n":"server"}');
     }
 
     public function nextDrawer() {
-        if ($this->playing)
-            return next($this->players);
-        return null;
+        if ($this->playing && $this->currentPlayer != null) {
+            $this->currentPlayer->drawing = false;
+            $this->currentPlayer->connection->send('{"c":"e"}');
+            $this->currentPlayer = next($this->players);
+            $this->currentPlayer->drawing = true;
+            $this->currentPlayer->connection->send('{"c":"b"}');
+        }
     }
 
     public function end() {
         $this->playing = false;
+        $this->currentPlayer->drawing = false;
+        $this->currentPlayer->connection->send('{"c":"b"}');
     }
 
     public function sendAll($msg) {
         foreach ($this->players as $id => $player) {
             $player->connection->send($msg);
         }
+    }
+
+    public function allReady() {
+        if (sizeof($this->players) <= 1)
+            return false;
+        foreach ($this->players as $id => $player)
+            if ($player->ready == false)
+                return false;
+        return true;
     }
 }
 
@@ -155,6 +175,10 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use (&$hall, &$roomList) {
             if ($player->drawing)
                 $room->sendAll($raw);
             break;
+        case 'sr':
+            $player->ready = true;
+            if ($room->allReady())
+                $room->start();
     }
 };
 $ws->count=1;

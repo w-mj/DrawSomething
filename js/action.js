@@ -1,8 +1,9 @@
 let ctx, cvs;
 let drawing = false;
-let myTurn = true;
+let myTurn = false;
 let roomnum = "";
 let nickname = "";
+let readyState = false;
 let ws = new WebSocket('ws://127.0.0.1:9394');
 
 $(document).ready(function() {
@@ -37,12 +38,16 @@ $(document).ready(function() {
         }
     });
     cvs.mouseup(function(event) {
-        drawing = false;
-        ws.send('{"c":"mu"}');
+        if (drawing) {
+            drawing = false;
+            ws.send('{"c":"mu"}');
+        }
     });
     cvs.mouseleave(function(event) {
-        drawing = false;
-        ws.send('{"c":"mu"}');
+        if (drawing) {
+            drawing = false;
+            ws.send('{"c":"mu"}');
+        }
     });
     $('#game-page').hide();
     $('#newroom').width($('#nickname').width()); // make login button as the same width.
@@ -62,12 +67,10 @@ function onMouseMove(x, y) {
 }
 
 function setLineWidth(width) {
-    ctx.lineWidth = width;
     ws.send(JSON.stringify({c:'sw', wd:width}));
 }
 
 function setLineColor(color) {
-    ctx.strokeStyle = color;
     ws.send(JSON.stringify({c:'sc', co:color}));
 }
 
@@ -132,6 +135,17 @@ let timer = class Timer {
     }
 };
 
+function ready() {
+    readyState = !readyState;
+    if (readyState) {
+        $('#ready-button').html('Unready');
+        ws.send('{"c":"sr"}');
+    } else {
+        $('#ready-button').html('Ready');
+        ws.send('{"c":"cr"}');
+    }
+}
+
 
 ws.onmessage = function(event) {
     console.log(event.data);
@@ -151,8 +165,8 @@ ws.onmessage = function(event) {
         case 'md': onMouseDown(data.x, data.y); break;
         case 'mm': onMouseMove(data.x, data.y); break;
         case 'mu': drawing = false; break;
-        case 'sc': setLineColor(data.co); break;
-        case 'sw': setLineWidth(data.wd); break;
+        case 'sc': ctx.strokeStyle = data.co; break;
+        case 'sw': ctx.lineWidth = data.wd; break;
         case 't': $('#timer').html(data.r); break;
         case 'c': if (data.r === 'e') {
             console.log('create room fail: ' + data.w);
