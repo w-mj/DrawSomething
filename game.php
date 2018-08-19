@@ -131,7 +131,7 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use (&$hall, &$roomList) {
             break;
         case 's': // say
             // TODO: check correct
-            $room->sendAll(json_encode(array('c'=>'s', 'n'=>$msg['n'])));
+            $room->sendAll(json_encode(array('c'=>'s', 't'=>$msg['t'], 'n'=>$player->nickname)));
             break;
         case 'd': // draw point
             $room->sendAll($raw);

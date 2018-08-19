@@ -26,7 +26,7 @@ When data is sending to server, 'c' may have following situations.
 
 When data is sending to client, 'c' may have following situations.
     'j': as return of join the room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>][, 'n':<room number>]}.
-    's': a player say something in chat box, {'c':'s', 't':<text without correct characters.>}.
+    's': a player say something in chat box, {'c':'s', 't':<text without correct characters.>, 'n':<user name>}.
     't': update clients' timer, just send directly too.
     'c': as return of create a room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>]}
     'q': set question, question is in followed 'q' field.

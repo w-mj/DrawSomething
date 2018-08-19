@@ -147,7 +147,7 @@ ws.onmessage = function(event) {
             else
                 console.log('join room fail: ' + data.w);
             break;
-        case 's': $("#text-window").append(data.t); break;
+        case 's': $("#text-window").append(data.n + ': ' + data.t + '\n'); break;
         case 'md': onMouseDown(data.x, data.y); break;
         case 'mm': onMouseMove(data.x, data.y); break;
         case 'mu': drawing = false; break;
@@ -166,6 +166,6 @@ ws.onmessage = function(event) {
             myTurn = true;
             break;
         case 'e': myTurn = false; break;
-        case 'i': $("#text-window").append("welcome " + data.n + " join the room."); break;
+        case 'i': $("#text-window").append("welcome " + data.n + " join the room.\n"); break;
     }
 };
