@@ -75,7 +75,7 @@ function setLineColor(color) {
 }
 
 function clearCanvas() {
-    ctx.clearRect(0, 0, cvs.width(), cvs.height());
+    ws.send('{"c":"cl"}');
 }
 
 let CanvasAutoResize = {
@@ -89,9 +89,9 @@ let CanvasAutoResize = {
     initialize: function(){
         let self = CanvasAutoResize;
         self.draw();
-        $(window).on('resize', function(event){
-            self.draw();
-        });
+        // $(window).on('resize', function(event){
+        //     self.draw();
+        // });
     }
 };
 
@@ -182,5 +182,17 @@ ws.onmessage = function(event) {
             break;
         case 'e': myTurn = false; break;
         case 'i': $("#text-window").append("welcome " + data.n + " join the room.\n"); break;
+        case 'l': $("#text-window").append(data.n + " leave the room.\n"); break;
+        case 'cl': ctx.clearRect(0, 0, cvs.width(), cvs.height()); break;
+        case 'p':
+            let board = $("#score-board");
+            board.html("name score state\n");
+            for (let i = 0; i < data.p.length; i++) {
+                // console.log(data.p);
+                let player = data.p[i];
+                console.log(player);
+                board.append(('->' + player.n + ' ' + player.s) + (player.r ?' √\n':' X\n'));
+            }
+            break;
     }
 };

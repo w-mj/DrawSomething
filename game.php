@@ -30,6 +30,9 @@ class Player {
     function __construct($connection) {
         $this->connection = $connection;
     }
+    public function structure() {
+        return array('n'=>$this->nickname, 's'=>$this->score, 'r'=>$this->ready);
+    }
 }
 function findFree () {
     global $roomList;
@@ -69,9 +72,11 @@ class Room {
         $player->room = $this;
         $this->sendAll(json_encode(array('c'=>'i', 'n'=>$player->nickname)));
         $player->connection->send('{"c":"j", "r":"s", "n":'.$this->roomNumber."}");
+        $this->sendPlayerList($player->connection);
     }
 
     public function leave(Player $player) {
+        $this->sendAll('{"c":"l", "n":"'.$player->nickname.'"}');
         unset($this->players[$player->connection->id]); // delete both key and value.
         if (count($this->players) == 0) {  // if all players leave the room, release.
             global $roomList;
@@ -86,6 +91,7 @@ class Room {
         $this->currentPlayer->drawing = true;
         $this->currentPlayer->connection->send('{"c":"b"}');
         $this->sendAll('{"c":"s", "t":"game start", "n":"server"}');
+        $this->sendAll('{"c":"cl"}');
     }
 
     public function nextDrawer() {
@@ -95,6 +101,7 @@ class Room {
             $this->currentPlayer = next($this->players);
             $this->currentPlayer->drawing = true;
             $this->currentPlayer->connection->send('{"c":"b"}');
+            $this->sendAll('{"c":"cl"}');
         }
     }
 
@@ -117,6 +124,14 @@ class Room {
             if ($player->ready == false)
                 return false;
         return true;
+    }
+
+    public function sendPlayerList($connection) {
+        $player_list = [];
+        foreach ($this->players as $id=>$player)
+            $player_list[] = $player->structure();
+        $json = json_encode(array('c'=>'p', 'p'=>$player_list));
+        $connection->send($json);
     }
 }
 
@@ -172,6 +187,7 @@ $ws->onMessage = function(TcpConnection $conn, $raw) use (&$hall, &$roomList) {
         case 'mm':
         case 'sc':
         case 'sw':
+        case 'cl':
             if ($player->drawing)
                 $room->sendAll($raw);
             break;

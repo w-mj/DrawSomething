@@ -20,8 +20,9 @@ When data is sending to server, 'c' may have following situations.
     'mm': mouse move. new position is in followed x, y field.
     'sc': set color. color is in followed 'co' field.
     'sw': set width. width is in followed 'wd' field.
+    'cl': clear canvas.
     'to': time out.
-    'i': in, a play join the room, player's nickname is followed by 'n'
+    'i': in, a player join the room, player's nickname is followed by 'n'
     'sr': ready.
     'cr': cancel ready.
 
@@ -30,10 +31,13 @@ When data is sending to client, 'c' may have following situations.
     'j': as return of join the room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>][, 'n':<room number>]}.
     's': a player say something in chat box, {'c':'s', 't':<text without correct characters.>, 'n':<user name>}.
     't': update clients' timer, just send directly too.
-    'c': as return of create a room. {'c':'j', 'r':'s|f'[, 'w':<the reason of fail>]}
+    'c': as return of create a room. {'c':'c', 'r':'s|f'[, 'w':<the reason of fail>]}
     'q': set question, question is in followed 'q' field.
     'h': set hint, hint is in followed 'h' field.
     'n': set the number of characters of question, the number is also in field 'q'.
     'md', 'mu', 'mm', 'sc': send to client directly.
     'b': begin drawing.
     'e': end drawing.
+    'p': player list, {'c':'p', 'p':[{player1}, {player2}..}
+    'i': in, a player join the room, player's nickname is followed by 'n'
+    'l': leave, a player leave the room
